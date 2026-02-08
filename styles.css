@@ -1,11 +1,4 @@
-:root{
-  --bg:#0f1216;   /* dark background for outdoor readability */
-  --card:#171a21; /* card surface */
-  --text:#f7f7f8; /* primary text */
-  --muted:#b9c2cf;/* secondary text */
-  --accent:#E31837;/* KC red */
-  --accent2:#FFB81C;/* KC gold */
-}
+:root{--bg:#0f1216;--card:#171a21;--text:#f7f7f8;--muted:#b9c2cf;--accent:#E31837;--accent2:#FFB81C}
 *{box-sizing:border-box}
 html:focus-within{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.5;margin:0}
@@ -19,6 +12,4 @@ body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,
 summary{cursor:pointer;color:var(--muted)}
 .button{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:900;text-decoration:none}
 .inline{color:#fff;text-decoration:underline}
-@media print{
-  .actions, .tag {display:none}
-}
+@media print{.actions, .tag {display:none}}
