@@ -1,1 +1,71 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Scan for The Shottenheimer Menu • QR</title><meta name="theme-color" content="#E31837"/><link rel="stylesheet" href="styles.css"/><style>body{display:flex;align-items:center;justify-content:center;min-height:100svh;padding:20px}.card{max-width:560px;width:100%;text-align:center;background:var(--card);padding:20px;border-radius:16px;border:1px solid rgba(255,255,255,.08)}h1{margin:6px 0 6px}.sub{color:var(--muted);margin:0 0 6px}.qr{margin:12px auto 8px;display:inline-block;background:#fff;padding:12px;border-radius:12px}.row{display:flex;gap:10px;justify-content:center;margin-top:10px}button{background:var(--accent);border:none;color:#fff;font-weight:900;padding:10px 14px;border-radius:10px;cursor:pointer}@media print{.row{display:none}body{padding:0}}</style></head><body><main class="card"><h1>Scan the QR</h1><p class="sub">Opens <strong>The Shottenheimer</strong> KC tailgate menu</p><p class="url" id="menuUrl"></p><div id="qrcode" class="qr"></div><div class="row"><button id="printBtn">Print</button><button id="downloadBtn">Download PNG</button></div></main><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-Mw8CKQ2JrX8o1bXj3k5Qh0V2Gq04cyrbq8WmAyd1H92rQ8Yw0ylkWw+N7pUdU4XMxr2W5fQ20oy3a0C4nU8Y7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script>(function(){const href=window.location.href;let base=href.replace(/qr\.html.*/,'');if(!base.endsWith('/'))base+='/';document.getElementById('menuUrl').textContent=base;new QRCode(document.getElementById('qrcode'),{text:base,width:288,height:288,colorDark:'#000',colorLight:'#fff'});document.getElementById('printBtn').addEventListener('click',()=>window.print());document.getElementById('downloadBtn').addEventListener('click',()=>{const c=document.querySelector('#qrcode canvas');if(!c){alert('QR not ready.');return;}const a=document.createElement('a');a.download='shottenheimer-qr.png';a.href=c.toDataURL('image/png');a.click();});})();</script></body></html>
+<!doctype html>
+<html lang=\"en\">
+<head>
+  <meta charset=\"utf-8\" />
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
+  <title>Scan for Menu • QR</title>
+  <meta name=\"theme-color\" content=\"#0ff4c6\" />
+  <link rel=\"stylesheet\" href=\"styles.css\" />
+  <style>
+    body{display:flex;align-items:center;justify-content:center;min-height:100svh;padding:24px}
+    .card{max-width:540px;width:100%;text-align:center}
+    h1{margin:0 0 10px}
+    .url{color:var(--muted);font-size:.95rem;word-break:break-all}
+    .qr{margin:14px auto 8px;display:inline-block;background:#fff;padding:12px;border-radius:12px}
+    .row{display:flex;gap:10px;justify-content:center;margin-top:8px}
+    button{background:var(--accent);border:none;color:#06231e;font-weight:800;padding:10px 14px;border-radius:10px;cursor:pointer}
+    @media print{
+      .row{display:none}
+      .url{font-size:0.8rem}
+      body{padding:0}
+    }
+  </style>
+</head>
+<body>
+  <main class=\"card\">
+    <h1>Scan for Menu</h1>
+    <p class=\"url\" id=\"menuUrl\"></p>
+    <div id=\"qrcode\" class=\"qr\"></div>
+    <div class=\"row\">
+      <button id=\"printBtn\">Print</button>
+      <button id=\"downloadBtn\">Download PNG</button>
+    </div>
+  </main>
+
+  <!-- QRCode.js (MIT) from CDN; used only on client when hosted -->
+  <script src=\"https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js\" integrity=\"sha512-Mw8CKQ2JrX8o1bXj3k5Qh0V2Gq04cyrbq8WmAyd1H92rQ8Yw0ylkWw+N7pUdU4XMxr2W5fQ20oy3a0C4nU8Y7Q==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>
+  <script>
+    // Derive the site root URL automatically (works for GitHub Pages root or repo pages)
+    (function(){
+      const href = window.location.href;
+      // If this page is served as /qr.html or /sub/qr.html, strip the filename to point to the menu root
+      let base = href.replace(/qr\.html.*/, '');
+      // Ensure trailing slash for a nice look
+      if (!base.endsWith('/')) base += '/';
+      document.getElementById('menuUrl').textContent = base;
+
+      // Create QR
+      const qr = new QRCode(document.getElementById('qrcode'), {
+        text: base,
+        width: 256,
+        height: 256,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+      });
+
+      // Print button
+      document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+      // Download PNG from canvas (QRCode.js renders a canvas element inside)
+      document.getElementById('downloadBtn').addEventListener('click', () => {
+        const canvas = document.querySelector('#qrcode canvas');
+        if (!canvas) return alert('QR not ready.');
+        const link = document.createElement('a');
+        link.download = 'menu-qr.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    })();
+  </script>
+</body>
+</html>
