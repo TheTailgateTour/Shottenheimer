@@ -29,6 +29,7 @@
     <div class="row">
       <button id="printBtn">Print</button>
       <button id="downloadBtn">Download PNG</button>
+      <button id="regenBtn">Re-generate</button>
     </div>
   </main>
 
@@ -40,7 +41,7 @@
     (function () {
       // Optional: hardcode your URL here so it never depends on the page location.
       // If left blank, we derive it from the current URL.
-      const HARDCODED_URL = 'https://thetailgatetour.github.io/shottenheimer/';
+      const HARDCODED_URL = '';
 
       function targetUrl() {
         if (HARDCODED_URL) return HARDCODED_URL;
@@ -55,8 +56,40 @@
       const urlText = document.getElementById('menuUrl');
       urlText.textContent = url;
 
+      function clearQR(){ host.innerHTML = ''; }
+
+      function generateWithLib() {
+        try {
+          if (typeof QRCode === 'function') {
+            clearQR();
+            new QRCode(host, { text: url, width: 288, height: 288, colorDark: '#000', colorLight: '#fff' });
+            return true;
+          }
+        } catch (e) { console.warn('QRCode lib error', e); }
+        return false;
+      }
+
+      function generateFallbackImg() {
+        // Fallback: use an image QR (no JS library required)
+        clearQR();
+        const img = document.createElement('img');
+        img.alt = 'QR code';
+        img.width = 288; img.height = 288;
+        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=288x288&data=' + encodeURIComponent(url);
+        host.appendChild(img);
+      }
+
+      // Try library; if blocked/not loaded, use fallback image
+      if (!generateWithLib()) {
+        generateFallbackImg();
+      }
+
       // Buttons
       document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+      document.getElementById('regenBtn').addEventListener('click', () => {
+        if (!generateWithLib()) generateFallbackImg();
+      });
 
       document.getElementById('downloadBtn').addEventListener('click', () => {
         const canvas = host.querySelector('canvas');
