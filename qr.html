@@ -1,69 +1,112 @@
 <!doctype html>
-<html lang=\"en\">
+<html lang="en">
 <head>
-  <meta charset=\"utf-8\" />
-  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
-  <title>Scan for Menu • QR</title>
-  <meta name=\"theme-color\" content=\"#0ff4c6\" />
-  <link rel=\"stylesheet\" href=\"styles.css\" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scan for The Shottenheimer Menu • QR</title>
+  <meta name="theme-color" content="#E31837" />
   <style>
-    body{display:flex;align-items:center;justify-content:center;min-height:100svh;padding:24px}
-    .card{max-width:540px;width:100%;text-align:center}
-    h1{margin:0 0 10px}
-    .url{color:var(--muted);font-size:.95rem;word-break:break-all}
-    .qr{margin:14px auto 8px;display:inline-block;background:#fff;padding:12px;border-radius:12px}
-    .row{display:flex;gap:10px;justify-content:center;margin-top:8px}
-    button{background:var(--accent);border:none;color:#06231e;font-weight:800;padding:10px 14px;border-radius:10px;cursor:pointer}
-    @media print{
-      .row{display:none}
-      .url{font-size:0.8rem}
-      body{padding:0}
-    }
+    :root{ --card:#171a21; --muted:#b9c2cf; --accent:#E31837; }
+    body{display:flex;align-items:center;justify-content:center;min-height:100svh;margin:0;
+         background:#0f1216;color:#f7f7f8;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    .card{max-width:560px;width:100%;text-align:center;background:var(--card);padding:20px;border-radius:16px;
+          border:1px solid rgba(255,255,255,.08)}
+    h1{margin:6px 0 6px}
+    .sub{color:var(--muted);margin:0 0 6px}
+    .url{color:var(--muted);font-size:.95rem;word-break:break-all;margin:2px 0 8px}
+    .qr{margin:12px auto 8px;display:inline-block;background:#fff;padding:12px;border-radius:12px}
+    .row{display:flex;gap:10px;justify-content:center;margin-top:10px}
+    button{background:var(--accent);border:none;color:#fff;font-weight:900;padding:10px 14px;border-radius:10px;cursor:pointer}
+    @media print{.row{display:none}body{padding:0}}
   </style>
 </head>
 <body>
-  <main class=\"card\">
-    <h1>Scan for Menu</h1>
-    <p class=\"url\" id=\"menuUrl\"></p>
-    <div id=\"qrcode\" class=\"qr\"></div>
-    <div class=\"row\">
-      <button id=\"printBtn\">Print</button>
-      <button id=\"downloadBtn\">Download PNG</button>
+  <main class="card">
+    <h1>Scan the QR</h1>
+    <p class="sub">Opens <strong>The Shottenheimer</strong> KC tailgate menu</p>
+    <p class="url" id="menuUrl"></p>
+    <div id="qrcode" class="qr" aria-label="QR code"></div>
+    <div class="row">
+      <button id="printBtn">Print</button>
+      <button id="downloadBtn">Download PNG</button>
+      <button id="regenBtn" title="Re-generate the QR">Re‑generate</button>
     </div>
   </main>
 
-  <!-- QRCode.js (MIT) from CDN; used only on client when hosted -->
-  <script src=\"https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js\" integrity=\"sha512-Mw8CKQ2JrX8o1bXj3k5Qh0V2Gq04cyrbq8WmAyd1H92rQ8Yw0ylkWw+N7pUdU4XMxr2W5fQ20oy3a0C4nU8Y7Q==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>
+  <!-- Try CDN first (okay to leave; if blocked, we fallback automatically) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+          integrity="sha512-Mw8CKQ2JrX8o1bXj3k5Qh0V2Gq04cyrbq8WmAyd1H92rQ8Yw0ylkWw+N7pUdU4XMxr2W5fQ20oy3a0C4nU8Y7Q=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
-    // Derive the site root URL automatically (works for GitHub Pages root or repo pages)
-    (function(){
-      const href = window.location.href;
-      // If this page is served as /qr.html or /sub/qr.html, strip the filename to point to the menu root
-      let base = href.replace(/qr\.html.*/, '');
-      // Ensure trailing slash for a nice look
-      if (!base.endsWith('/')) base += '/';
-      document.getElementById('menuUrl').textContent = base;
+    (function () {
+      // Optional: hardcode your URL here so it never depends on the page location.
+      // If left blank, we derive it from the current URL.
+      const HARDCODED_URL = 'https://thetailgatetour.github.io/Shottenheimer/';
 
-      // Create QR
-      const qr = new QRCode(document.getElementById('qrcode'), {
-        text: base,
-        width: 256,
-        height: 256,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-      });
+      function targetUrl() {
+        if (HARDCODED_URL) return HARDCODED_URL;
+        const href = window.location.href;
+        let base = href.replace(/qr(-fixed)?\\.html.*/i, '');
+        if (!base.endsWith('/')) base += '/';
+        return base;
+      }
 
-      // Print button
+      const url = targetUrl();
+      const host = document.getElementById('qrcode');
+      const urlText = document.getElementById('menuUrl');
+      urlText.textContent = url;
+
+      function clearQR(){ host.innerHTML = ''; }
+
+      function generateWithLib() {
+        try {
+          if (typeof QRCode === 'function') {
+            clearQR();
+            new QRCode(host, { text: url, width: 288, height: 288, colorDark: '#000', colorLight: '#fff' });
+            return true;
+          }
+        } catch (e) { console.warn('QRCode lib error', e); }
+        return false;
+      }
+
+      function generateFallbackImg() {
+        // Fallback: use an image QR (no JS library required)
+        clearQR();
+        const img = document.createElement('img');
+        img.alt = 'QR code';
+        img.width = 288; img.height = 288;
+        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=288x288&data=' + encodeURIComponent(url);
+        host.appendChild(img);
+      }
+
+      // Try library; if blocked/not loaded, use fallback image
+      if (!generateWithLib()) {
+        generateFallbackImg();
+      }
+
+      // Buttons
       document.getElementById('printBtn').addEventListener('click', () => window.print());
 
-      // Download PNG from canvas (QRCode.js renders a canvas element inside)
+      document.getElementById('regenBtn').addEventListener('click', () => {
+        if (!generateWithLib()) generateFallbackImg();
+      });
+
       document.getElementById('downloadBtn').addEventListener('click', () => {
-        const canvas = document.querySelector('#qrcode canvas');
-        if (!canvas) return alert('QR not ready.');
-        const link = document.createElement('a');
-        link.download = 'menu-qr.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+        const canvas = host.querySelector('canvas');
+        if (canvas) {
+          const a = document.createElement('a');
+          a.download = 'shottenheimer-qr.png';
+          a.href = canvas.toDataURL('image/png');
+          a.click();
+          return;
+        }
+        const img = host.querySelector('img');
+        if (img) {
+          // Open fallback image in a new tab so it can be saved
+          window.open(img.src, '_blank');
+          return;
+        }
+        alert('QR not ready.');
       });
     })();
   </script>
