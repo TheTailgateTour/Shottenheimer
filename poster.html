@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang=\"en\">
+<head>
+  <meta charset=\"utf-8\" />
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
+  <title>The Shottenheimer • Printable Poster</title>
+  <link rel=\"stylesheet\" href=\"styles.css\" />
+  <style>
+    body{background:#fff;color:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    .sheet{width:8.5in;min-height:11in;margin:0 auto;padding:0.5in;box-sizing:border-box}
+    .header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:4px solid #E31837;padding-bottom:10px;margin-bottom:14px}
+    .title{font-size:36px;font-weight:900;color:#E31837}
+    .subtitle{font-size:16px;color:#c22}
+    .qr{display:flex;gap:16px;align-items:center}
+    .qr-box{background:#fff;border:2px solid #000;border-radius:8px;padding:8px}
+    .list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
+    .item{border-left:6px solid #FFB81C;background:#fff6e0;padding:8px;border-radius:8px}
+    .fine{margin-top:14px;color:#666;font-size:12px}
+    @media print{body{margin:0}.sheet{box-shadow:none}}
+  </style>
+</head>
+<body>
+  <div class=\"sheet\">
+    <div class=\"header\">
+      <div>
+        <div class=\"title\">The Shottenheimer</div>
+        <div class=\"subtitle\">KC Tailgate Shot Menu — Scan the QR</div>
+      </div>
+      <div class=\"qr\">
+        <div>
+          <div id=\"qrcode\" class=\"qr-box\"></div>
+          <div id=\"url\" style=\"font-size:11px;max-width:2.6in;word-break:break-all\"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class=\"list\">
+      <div class=\"item\"><strong>Showgirl</strong><br/><small>Berry Vodka • Orange Vodka • Watermelon Pucker • Sour • Agave</small></div>
+      <div class=\"item\"><strong>Salted Paloma</strong><br/><small>Grapefruit Vodka • Silver Tequila • Sour • Agave • Salt</small></div>
+      <div class=\"item\"><strong>White Tea</strong><br/><small>Titos Vodka • Peach Schnapps • Sour</small></div>
+      <div class=\"item\"><strong>Green Tea</strong><br/><small>Crown Peach • Peach Schnapps • Sour</small></div>
+      <div class=\"item\"><strong>Gummy Bear</strong><br/><small>Black Cherry Rum • Pineapple Vodka • Peach Schnapps • Sour</small></div>
+    </div>
+
+    <p class=\"fine\">21+ only. Please drink responsibly. Not affiliated with or endorsed by the Kansas City Chiefs or the NFL.</p>
+  </div>
+
+  <script src=\"https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js\" integrity=\"sha512-Mw8CKQ2JrX8o1bXj3k5Qh0V2Gq04cyrbq8WmAyd1H92rQ8Yw0ylkWw+N7pUdU4XMxr2W5fQ20oy3a0C4nU8Y7Q==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>
+  <script>
+    (function(){
+      const href = window.location.href.replace(/poster\.html.*/, '');
+      const url = href.endsWith('/') ? href : href + '/';
+      document.getElementById('url').textContent = url;
+      new QRCode(document.getElementById('qrcode'), {text: url, width: 196, height: 196});
+    })();
+  </script>
+</body>
+</html>
