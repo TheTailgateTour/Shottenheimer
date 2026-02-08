@@ -29,6 +29,7 @@
     <div class="row">
       <button id="printBtn">Print</button>
       <button id="downloadBtn">Download PNG</button>
+      <button id="regenBtn">Re-generate</button>
     </div>
   </main>
 
@@ -40,7 +41,7 @@
     (function () {
       // Optional: hardcode your URL here so it never depends on the page location.
       // If left blank, we derive it from the current URL.
-      const HARDCODED_URL = '';
+      const HARDCODED_URL = 'https://thetailgatetour.github.io/shottenheimer/';
 
       function targetUrl() {
         if (HARDCODED_URL) return HARDCODED_URL;
@@ -85,6 +86,10 @@
 
       // Buttons
       document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+      document.getElementById('regenBtn').addEventListener('click', () => {
+        if (!generateWithLib()) generateFallbackImg();
+      });
 
       document.getElementById('downloadBtn').addEventListener('click', () => {
         const canvas = host.querySelector('canvas');
