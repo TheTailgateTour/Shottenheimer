@@ -29,7 +29,6 @@
     <div class="row">
       <button id="printBtn">Print</button>
       <button id="downloadBtn">Download PNG</button>
-      <button id="regenBtn">Re-generate</button>
     </div>
   </main>
 
@@ -86,10 +85,6 @@
 
       // Buttons
       document.getElementById('printBtn').addEventListener('click', () => window.print());
-
-      document.getElementById('regenBtn').addEventListener('click', () => {
-        if (!generateWithLib()) generateFallbackImg();
-      });
 
       document.getElementById('downloadBtn').addEventListener('click', () => {
         const canvas = host.querySelector('canvas');
