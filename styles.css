@@ -124,3 +124,19 @@ summary {
   color: #fff;
   border: none;
   border-radius: 10px;
+  
+/* Keep QR link in the banner white in all states */
+.banner a.inline:link,
+.banner a.inline:visited {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.banner a.inline:hover,
+.banner a.inline:focus,
+.banner a.inline:active {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-thickness: 2px; /* subtle hover/focus feedback */
+}
+
