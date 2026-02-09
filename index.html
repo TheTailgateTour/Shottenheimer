@@ -13,7 +13,7 @@
       <div class="container">
          <header>
             <div class="brand">
-               <h1>🏈 The Shottenheimer ⚾</h1>
+               <h1>🏈 The Shottenheimer1 ⚾</h1>
             </div>
          </header>
          <div class="banner" role="note">Tap a card to see the ingredients.<br/>Print a <a href="qr.html" class="inline">QR Code</a>. </div>
@@ -90,18 +90,78 @@
       </div>
       
 <script>
-  // Make an entire .card toggle its inner <details>
-  document.querySelectorAll('.card').forEach((card) => {
-    const details = card.querySelector('details');
-    if (!details) return;
+  (function () {
+    const MARGIN = 12;      // px breathing room around the card
+    const MIN_MOVE = 20;    // px; ignore tiny adjustments to avoid micro scrolls
 
-    card.addEventListener('click', (evt) => {
-      // Don’t toggle if the click was on a link/button/summary to avoid odd UX
-      if (evt.target.closest('a, button, summary, [data-no-toggle]')) return;
+    const prefersReduced = () =>
+      window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
-      details.open = !details.open;
+    const vpHeight = () =>
+      (window.visualViewport?.height || window.innerHeight);
+
+    function ensureCardInView(card) {
+      const viewH = vpHeight();
+      const rect = card.getBoundingClientRect();
+      const tall = rect.height > (viewH - 2 * MARGIN);
+
+      let delta = 0;
+
+      if (tall) {
+        // If the expanded card is taller than the viewport,
+        // prioritize keeping the top in view first; if bottom
+        // still overflows, nudge down.
+        if (rect.top < MARGIN) {
+          delta = rect.top - MARGIN; // negative -> scroll up
+        } else if (rect.bottom > (viewH - MARGIN)) {
+          delta = rect.bottom - (viewH - MARGIN); // positive -> scroll down
+        }
+      } else {
+        // Card fits on screen; ensure both top & bottom remain visible.
+        const overflowBottom = rect.bottom - (viewH - MARGIN); // >0 means needs scroll down
+        const overflowTop = MARGIN - rect.top;                 // >0 means needs scroll up
+
+        if (overflowBottom > 0) delta = overflowBottom;
+        else if (overflowTop > 0) delta = -overflowTop;
+      }
+
+      if (Math.abs(delta) >= MIN_MOVE) {
+        window.scrollBy({
+          top: delta,
+          behavior: prefersReduced() ? 'auto' : 'smooth'
+        });
+      }
+    }
+
+    // Your current "click card to toggle" behavior + smooth reveal
+    document.querySelectorAll('.card').forEach((card) => {
+      const details = card.querySelector('details');
+      if (!details) return;
+
+      // Click anywhere on card (except these) to toggle
+      card.addEventListener('click', (evt) => {
+        if (evt.target.closest('a, button, summary, [data-no-toggle]')) return;
+
+        details.open = !details.open;
+
+        // If we just opened, wait for layout to expand, then adjust scroll
+        if (details.open) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => ensureCardInView(card));
+          });
+        }
+      });
+
+      // Also handle users tapping the Summary itself
+      details.addEventListener('toggle', () => {
+        if (details.open) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => ensureCardInView(card));
+          });
+        }
+      }, { passive: true });
     });
-  });
+  })();
 </script>
 
    </body>
