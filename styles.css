@@ -1,10 +1,16 @@
 :root {
   --bg: #0f1216;
-  --card: #171a21; /* reserved if you want to use it later */
+  --card: #171a21; /* solid panel color used by QR card */
   --text: #f7f7f8;
   --muted: #b9c2cf;
   --accent: #E31837;
   --accent2: #FFB81C;
+
+  /* Optional tokens */
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+  --focus-ring: 3px solid var(--accent);
+  --focus-offset: 3px;
 }
 
 /* Base / reset */
@@ -51,12 +57,12 @@ h1 {
   font-weight: 600;
 }
 
-/* Tag (not used on index today, but preserved) */
+/* Tag (kept for future use) */
 .tag {
   background: linear-gradient(90deg, var(--accent), #ff4d5a);
   color: #fff;
   padding: 8px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-weight: 900;
 }
 
@@ -76,11 +82,11 @@ h1 {
   gap: 16px;
 }
 
-/* Cards (match the screenshot: no hover lift, linear background only) */
+/* Cards (match your screenshot: linear gradient, no hover lift) */
 .card {
   background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02));
   border: 1px solid rgba(255, 255, 255, .08);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   padding: 16px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, .35);
   cursor: pointer;
@@ -99,7 +105,7 @@ h1 {
   background: var(--accent2);
   color: #211a00;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-weight: 900;
   font-size: .8rem;
 }
@@ -124,24 +130,31 @@ summary {
   color: #fff;
   border: none;
   border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 900;
+  text-decoration: none;
+  display: inline-block; /* supports <a> or <button>.button */
 }
-  
-/* Keep QR link in the banner white in all states */
-.banner a.inline:link,
-.banner a.inline:visited {
+
+/* White inline links (used for banner + QR link text) */
+.inline,
+.inline:link,
+.inline:visited,
+.inline:hover,
+.inline:focus,
+.inline:active {
   color: #fff;
   text-decoration: underline;
 }
 
-.banner a.inline:hover,
-.banner a.inline:focus,
-.banner a.inline:active {
-  color: #fff;
-  text-decoration: underline;
-  text-decoration-thickness: 2px; /* subtle hover/focus feedback */
+/* Footer */
+footer {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: .9rem;
 }
 
-  /* === QR page styles (keep at end so they override) === */
+/* ===== QR PAGE STYLES ===== */
 
 /* Full-viewport center layout */
 .page-center {
@@ -151,7 +164,7 @@ summary {
   min-height: 100svh;
 }
 
-/* The QR card uses a solid panel instead of the gradient card used on index */
+/* QR card: solid panel (original QR look) */
 .qr-card {
   max-width: 560px;
   width: 100%;
@@ -162,8 +175,11 @@ summary {
   border: 1px solid rgba(255, 255, 255, .08);
 }
 
-/* Subtitle / URL text */
-.sub { color: var(--muted); margin: 0 0 6px; }
+/* QR page heading spacing (matches your old inline h1 margins) */
+.qr-card h1 { margin: 6px 0 6px; }
+
+/* QR subtitle + URL */
+.qr-card .sub { margin: 0 0 6px; }
 .url {
   color: var(--muted);
   font-size: .95rem;
@@ -171,7 +187,7 @@ summary {
   margin: 2px 0 8px;
 }
 
-/* The white QR box that holds the canvas/image */
+/* QR white frame */
 .qr {
   margin: 12px auto 8px;
   display: inline-block;
@@ -188,7 +204,7 @@ summary {
   margin-top: 10px;
 }
 
-/* Make native <button> match your site button style */
+/* Native <button> to match site button style */
 button {
   background: var(--accent);
   border: none;
@@ -199,18 +215,47 @@ button {
   cursor: pointer;
 }
 
-/* Keep “inline” links white in all states (fixes purple/blue visited) */
-.inline,
-.inline:link,
-.inline:visited,
-.inline:hover,
-.inline:focus,
-.inline:active {
-  color: #fff;
-  text-decoration: underline;
+/* ===== Accessibility & Interaction ===== */
+
+/* Remove default mobile tap flash but keep keyboard focus rings */
+html, body,
+a, a *,
+button, button *,
+summary,
+.card, .card * {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
-/* Print: hide the button row on the QR page, and remove body padding if any */
+/* Prevent default :active flash on some browsers */
+a:active,
+button:active {
+  background-color: transparent;
+}
+
+/* Visible focus styles for keyboard users */
+.card:focus-visible,
+summary:focus-visible,
+a:focus-visible,
+button:focus-visible,
+.button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-radius: 10px;
+}
+
+/* Motion safety (optional) */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print cleanup */
 @media print {
-  .row { display: none !important; }
+  .actions, .tag { display: none !important; }
+  .row { display: none !important; } /* hide QR buttons when printing */
 }
