@@ -108,5 +108,21 @@
             </article>
          </section>
       </div>
+      
+<script>
+  // Make an entire .card toggle its inner <details>
+  document.querySelectorAll('.card').forEach((card) => {
+    const details = card.querySelector('details');
+    if (!details) return;
+
+    card.addEventListener('click', (evt) => {
+      // Don’t toggle if the click was on a link/button/summary to avoid odd UX
+      if (evt.target.closest('a, button, summary, [data-no-toggle]')) return;
+
+      details.open = !details.open;
+    });
+  });
+</script>
+
    </body>
 </html>
