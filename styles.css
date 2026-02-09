@@ -13,16 +13,4 @@ summary{cursor:pointer;color:var(--muted)}
 .button{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:900;text-decoration:none}
 .inline{color:#fff;text-decoration:underline}
 
-/* Remove the default blue tap flash */
-.card, summary, a, button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Important: keep a visible focus style for accessibility */
-.card:focus-visible, summary:focus-visible, a:focus-visible, button:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 10px;
-}
-
 @media print{.actions, .tag {display:none}}
