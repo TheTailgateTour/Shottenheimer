@@ -124,6 +124,7 @@ summary {
   color: #fff;
   border: none;
   border-radius: 10px;
+}
   
 /* Keep QR link in the banner white in all states */
 .banner a.inline:link,
