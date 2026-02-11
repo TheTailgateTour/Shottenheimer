@@ -341,3 +341,29 @@ card .title-row {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
+/* Keep the chip approach you already have */
+.card .title-row {
+  position: relative;
+  display: block;
+  margin: 0 0 .35rem;
+  padding-right: var(--chip-reserve); /* still reserve space for the chip */
+  min-height: var(--chip-h);
+}
+
+/* Force single line and gently shrink so it fits at 300–1fr card widths */
+.item-title {
+  display: block;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;      /* stay on one line */
+  overflow: visible;        /* show all text; no ellipsis */
+  text-overflow: clip;      /* (explicit) no ellipsis */
+
+  /* Dial these to taste (these values are conservative for 300px cards + chip) */
+  font-size: clamp(18px, 1rem + 0.35vw, 20px);
+}
+
+/* If titles *still* wrap at 300px, nudge min card width very slightly */
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
