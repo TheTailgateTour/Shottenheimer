@@ -303,4 +303,5 @@ button:focus-visible,
   /* add spacing between the label, number, and unit */
   gap: .35ch;            /* or 0.25rem; .35ch scales with font width nicely */
   white-space: nowrap;
+}
 
