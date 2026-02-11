@@ -295,3 +295,12 @@ button:focus-visible,
   white-space: nowrap;
   pointer-events: auto;
 }
+
+
+.oz-total {
+  display: inline-flex;
+  align-items: center;
+  /* add spacing between the label, number, and unit */
+  gap: .35ch;            /* or 0.25rem; .35ch scales with font width nicely */
+  white-space: nowrap;
+
