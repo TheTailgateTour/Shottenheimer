@@ -86,87 +86,153 @@
                   </ul>
                </details>
             </article>
-             <article class="card" id="fireball">
+            <article class="card" id="fireball">
                <h2 class="item-title">💚🍑 Fireball</h2>
                <p class="pill">Whiskey • Cinnamon</p>
             </article>
          </section>
       </div>
-      
-<script>
-  (function () {
-    const MARGIN = 12;      // px breathing room around the card
-    const MIN_MOVE = 20;    // px; ignore tiny adjustments to avoid micro scrolls
-
-    const prefersReduced = () =>
-      window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
-
-    const vpHeight = () =>
-      (window.visualViewport?.height || window.innerHeight);
-
-    function ensureCardInView(card) {
-      const viewH = vpHeight();
-      const rect = card.getBoundingClientRect();
-      const tall = rect.height > (viewH - 2 * MARGIN);
-
-      let delta = 0;
-
-      if (tall) {
-        // If the expanded card is taller than the viewport,
-        // prioritize keeping the top in view first; if bottom
-        // still overflows, nudge down.
-        if (rect.top < MARGIN) {
-          delta = rect.top - MARGIN; // negative -> scroll up
-        } else if (rect.bottom > (viewH - MARGIN)) {
-          delta = rect.bottom - (viewH - MARGIN); // positive -> scroll down
-        }
-      } else {
-        // Card fits on screen; ensure both top & bottom remain visible.
-        const overflowBottom = rect.bottom - (viewH - MARGIN); // >0 means needs scroll down
-        const overflowTop = MARGIN - rect.top;                 // >0 means needs scroll up
-
-        if (overflowBottom > 0) delta = overflowBottom;
-        else if (overflowTop > 0) delta = -overflowTop;
-      }
-
-      if (Math.abs(delta) >= MIN_MOVE) {
-        window.scrollBy({
-          top: delta,
-          behavior: prefersReduced() ? 'auto' : 'smooth'
-        });
-      }
-    }
-
-    // Your current "click card to toggle" behavior + smooth reveal
-    document.querySelectorAll('.card').forEach((card) => {
-      const details = card.querySelector('details');
-      if (!details) return;
-
-      // Click anywhere on card (except these) to toggle
-      card.addEventListener('click', (evt) => {
-        if (evt.target.closest('a, button, summary, [data-no-toggle]')) return;
-
-        details.open = !details.open;
-
-        // If we just opened, wait for layout to expand, then adjust scroll
-        if (details.open) {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => ensureCardInView(card));
-          });
-        }
-      });
-
-      // Also handle users tapping the Summary itself
-      details.addEventListener('toggle', () => {
-        if (details.open) {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => ensureCardInView(card));
-          });
-        }
-      }, { passive: true });
-    });
-  })();
-</script>
-
+      <script>
+         (function () {
+           const MARGIN = 12;      // px breathing room around the card
+           const MIN_MOVE = 20;    // px; ignore tiny adjustments to avoid micro scrolls
+         
+           const prefersReduced = () =>
+             window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
+         
+           const vpHeight = () =>
+             (window.visualViewport?.height || window.innerHeight);
+         
+           function ensureCardInView(card) {
+             const viewH = vpHeight();
+             const rect = card.getBoundingClientRect();
+             const tall = rect.height > (viewH - 2 * MARGIN);
+         
+             let delta = 0;
+         
+             if (tall) {
+               // If the expanded card is taller than the viewport,
+               // prioritize keeping the top in view first; if bottom
+               // still overflows, nudge down.
+               if (rect.top < MARGIN) {
+                 delta = rect.top - MARGIN; // negative -> scroll up
+               } else if (rect.bottom > (viewH - MARGIN)) {
+                 delta = rect.bottom - (viewH - MARGIN); // positive -> scroll down
+               }
+             } else {
+               // Card fits on screen; ensure both top & bottom remain visible.
+               const overflowBottom = rect.bottom - (viewH - MARGIN); // >0 means needs scroll down
+               const overflowTop = MARGIN - rect.top;                 // >0 means needs scroll up
+         
+               if (overflowBottom > 0) delta = overflowBottom;
+               else if (overflowTop > 0) delta = -overflowTop;
+             }
+         
+             if (Math.abs(delta) >= MIN_MOVE) {
+               window.scrollBy({
+                 top: delta,
+                 behavior: prefersReduced() ? 'auto' : 'smooth'
+               });
+             }
+           }
+         
+           // Your current "click card to toggle" behavior + smooth reveal
+           document.querySelectorAll('.card').forEach((card) => {
+             const details = card.querySelector('details');
+             if (!details) return;
+         
+             // Click anywhere on card (except these) to toggle
+             card.addEventListener('click', (evt) => {
+               if (evt.target.closest('a, button, summary, [data-no-toggle]')) return;
+         
+               details.open = !details.open;
+         
+               // If we just opened, wait for layout to expand, then adjust scroll
+               if (details.open) {
+                 requestAnimationFrame(() => {
+                   requestAnimationFrame(() => ensureCardInView(card));
+                 });
+               }
+             });
+         
+             // Also handle users tapping the Summary itself
+             details.addEventListener('toggle', () => {
+               if (details.open) {
+                 requestAnimationFrame(() => {
+                   requestAnimationFrame(() => ensureCardInView(card));
+                 });
+               }
+             }, { passive: true });
+           });
+         })();
+      </script>
+      <script>
+         /* === Shottenheimer: read-only totals from GViz (select E,F) === */
+         (function () {
+           const SHEET_ID   = '1eZlAI4mAAWZRDRVeygCu3ntA_BdYWSA3jiJ4ObEjiNA'; // from /spreadsheets/d/<ID>/edit
+           const SHEET_NAME = 'Shottenheimer';      // tab name holding E (Shot) and F (Amount)
+         
+           const ID_MAP = {}; // same idea as above if you need overrides
+         
+           function toId(s) {
+             const raw = String(s || '').trim().toLowerCase();
+             return ID_MAP[raw] || raw.replace(/[\s_]+/g, '-');
+           }
+         
+           function buildGvizUrl() {
+             const tq = 'select E,F';
+             return `https://docs.google.com/spreadsheets/d/${encodeURIComponent(SHEET_ID)}`
+                  + `/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`
+                  + `&tq=${encodeURIComponent(tq)}&cachebust=${Date.now()}`;
+           }
+         
+           function parseGviz(text) {
+             const json = JSON.parse(text.replace(/^[\s\S]*?setResponse\(/, '').replace(/\);\s*$/, ''));
+             const rows = json.table?.rows || [];
+             const map = Object.create(null);
+             for (const r of rows) {
+               const shot = r.c?.[0]?.v ?? '';
+               const amt  = Number(r.c?.[1]?.v || 0);
+               const id   = toId(shot);
+               if (id) map[id] = amt;
+             }
+             return map;
+           }
+         
+           function ensureDisplaySlots() {
+             document.querySelectorAll('.card[id]').forEach(card => {
+               if (card.querySelector('.oz-total')) return;
+               const badge = document.createElement('div');
+               badge.className = 'oz-total';
+               badge.setAttribute('data-no-toggle', '');
+               badge.innerHTML = `<span>Total:</span> <span class="count" data-id="${card.id}">0</span> <span>oz</span>`;
+               const pill = card.querySelector('.pill');
+               if (pill) pill.insertAdjacentElement('afterend', badge);
+               else card.appendChild(badge);
+             });
+           }
+         
+           function fmt(n){return Math.round(n)===n?String(n):n.toFixed(1).replace(/\.0$/,'');}
+           function render(map){
+             document.querySelectorAll('.card[id]').forEach(card=>{
+               const v = map[card.id] ?? 0;
+               card.querySelectorAll(`.oz-total .count[data-id="${card.id}"]`)
+                   .forEach(el => el.textContent = fmt(v));
+             });
+           }
+         
+           async function refresh(){
+             try {
+               const res = await fetch(buildGvizUrl(), { cache: 'no-store' });
+               render(parseGviz(await res.text()));
+             } catch (e) {
+               console.error('GViz fetch failed:', e);
+             }
+           }
+         
+           ensureDisplaySlots();
+           refresh();
+         })();
+      </script>
    </body>
 </html>
