@@ -304,3 +304,19 @@ button:focus-visible,
   gap: .35ch;            /* or 0.25rem; .35ch scales with font width nicely */
   white-space: nowrap;
 }
+
+/* === Tighter chip position + smaller reserve === */
+:root {
+  /* was 96px – trim to what you actually need for your longest chip */
+  --chip-reserve: 78px;   /* try 72–84px; pick the smallest that never overlaps */
+}
+
+/* reduce the right inset so the chip sits closer to the card edge */
+.card .title-row .oz-total {
+  right: 4px;             /* was 12px; try 0–6px depending on taste */
+}
+
+/* keep the row at least as tall as the chip */
+.card .title-row {
+  min-height: var(--chip-h);
+}
