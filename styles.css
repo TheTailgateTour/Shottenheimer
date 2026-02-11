@@ -298,3 +298,54 @@ button:focus-visible,
   .actions, .tag { display: none !important; }
   .row { display: none !important; } /* hide QR buttons when printing */
 }
+
+
+/* Keep the title and chip on a single line */
+.card .title-row {
+  display: flex;
+  align-items: baseline;    /* aligns with title text baseline */
+  flex-wrap: nowrap;        /* never wrap to a second line */
+  column-gap: .5rem;        /* small gap between title and chip */
+  margin: 0 0 .35rem;       /* breathing room before the pill */
+}
+
+/* Override the earlier .item-title rule: make it a single-line block that can ellipsize */
+.card .item-title {
+  display: block;           /* override earlier display:flex so ellipsis can work */
+  margin: 0;                /* no extra bottom margin inside the row */
+  line-height: 1.15;
+  flex: 1 1 auto;           /* use remaining width */
+  min-width: 0;             /* required for flex+ellipsis */
+  white-space: nowrap;      /* keep on one line */
+  overflow: hidden;         /* clip if too long */
+  text-overflow: ellipsis;  /* show "…" if clipped */
+}
+
+/* Smaller, tighter, single‑line chip */
+.oz-total {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .12rem .40rem;   /* tighter padding */
+  border-radius: 999px;
+  background: #fff7f8;
+  border: 1px solid #ffd6dd;
+  color: #6b1a1f;
+  font-weight: 700;
+  font-size: .75rem;        /* smaller text */
+  line-height: 1;
+  white-space: nowrap;      /* keep "Total: 56 oz" together */
+  margin: 0 0 0 .25rem;     /* tiny left gap from the title */
+  flex: 0 0 auto;           /* don't grow/shrink */
+}
+
+/* Monospaced numerals look cleaner in chips */
+.oz-total .count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Optional: make chip scale down a touch on narrow phones */
+@media (max-width: 420px) {
+  .oz-total { font-size: .7rem; padding: .1rem .35rem; }
+}
+
