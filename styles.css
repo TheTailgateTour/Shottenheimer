@@ -265,3 +265,33 @@ button:focus-visible,
   .actions, .tag { display: none !important; }
   .row { display: none !important; } /* hide QR buttons when printing */
 }
+
+.card .title-row {
+  position: relative;             /* NEW: chip will position relative to this row */
+  display: block;
+  margin: 0 0 .35rem;
+  padding-right: var(--chip-reserve);
+  min-height: var(--chip-h);      /* NEW: guarantees room for the chip */
+}
+
+
+.oz-total {
+  position: absolute;
+  top: 50%;                        /* NEW: vertical centering anchor */
+  right: 12px;                     /* keeps the same visual inset on the right */
+  transform: translateY(-50%);     /* NEW: true centering */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--chip-h);
+  padding: 0 var(--chip-pad-x);
+  border-radius: calc(var(--chip-h) / 2);
+  background: #fff7f8;
+  border: 1px solid #ffd6dd;
+  color: #6b1a1f;
+  font-weight: 700;
+  font-size: .75rem;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: auto;
+}
