@@ -413,5 +413,71 @@ card .title-row {
     font-size: .7rem;
   }
 }
+/* Let the card be the positioning context for the chip */
+.card { position: relative; }
 
+/* Title block: normal wrapping title; reserve a little room on the right so
+   long titles don't flow under the chip */
+.card .title-row {
+  display: block;                       /* no flex; simpler wrapping */
+  margin: 0 0 .35rem;
+  padding-right: var(--chip-reserve, 96px); /* space reserved for the chip */
+}
+
+/* Full title, no ellipsis */
+.card .item-title {
+  display: block;            /* override earlier display:flex */
+  margin: 0;
+  line-height: 1.2;
+  white-space: normal;       /* allow wrapping */
+  overflow: visible;         /* no clipping */
+  text-overflow: clip;       /* no ellipsis */
+}
+
+/* --- CHIP: absolutely positioned top-right, perfectly centered text --- */
+.oz-total {
+  /* Tweak these 3 custom properties to taste */
+  --chip-h: 1.35rem;         /* overall height of the pill */
+  --chip-pad-x: .5rem;       /* horizontal padding */
+  --chip-nudge-y: -1px;      /* optical vertical nudge (negative = move up) */
+
+  position: absolute;
+  top: 10px;                 /* distance from top edge of the card */
+  right: 12px;               /* distance from right edge of the card */
+
+  display: inline-flex;
+  align-items: center;       /* vertical centering */
+  justify-content: center;   /* horizontal centering */
+  height: var(--chip-h);
+  padding: 0 var(--chip-pad-x);  /* no vertical padding -> true centering */
+  border-radius: calc(var(--chip-h) / 2);
+  background: #fff7f8;
+  border: 1px solid #ffd6dd;
+  color: #6b1a1f;
+  font-weight: 700;
+  font-size: .75rem;
+  line-height: 1;            /* avoid extra line-box */
+  white-space: nowrap;       /* keep "Total: 56 oz" together */
+  margin: 0;
+  flex: 0 0 auto;
+  transform: translateY(var(--chip-nudge-y)); /* tiny optical lift */
+  pointer-events: auto;       /* still clickable if you ever need it */
+}
+
+/* Ensure inner spans don't add their own line-height quirks */
+.oz-total > span { display: inline-block; line-height: 1; }
+
+/* Nice-looking numerals */
+.oz-total .count { font-variant-numeric: tabular-nums; }
+
+/* Optional: smaller chip on narrow phones */
+@media (max-width: 420px) {
+  .oz-total {
+    --chip-h: 1.25rem;
+    --chip-pad-x: .45rem;
+    --chip-nudge-y: -0.5px;
+    font-size: .72rem;
+  }
+  .card .title-row { padding-right: var(--chip-reserve, 92px); }
+}
 
