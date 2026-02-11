@@ -11,6 +11,12 @@
   --radius-pill: 999px;
   --focus-ring: 3px solid var(--accent);
   --focus-offset: 3px;
+
+  /* Chip tuning */
+  --chip-h: 1.35rem;     /* chip height */
+  --chip-pad-x: .5rem;   /* horizontal padding inside chip */
+  --chip-nudge-y: -1px;  /* optical vertical nudge (negative = up) */
+  --chip-reserve: 96px;  /* space reserved on the right of the title area */
 }
 
 /* Base / reset */
@@ -40,11 +46,7 @@ header {
   margin: 8px 0 18px;
 }
 
-.brand {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
+.brand { display: flex; align-items: baseline; gap: 10px; }
 
 h1 {
   margin: 0;
@@ -52,10 +54,7 @@ h1 {
   letter-spacing: .3px;
 }
 
-.sub {
-  color: var(--muted);
-  font-weight: 600;
-}
+.sub { color: var(--muted); font-weight: 600; }
 
 /* Tag (kept for future use) */
 .tag {
@@ -82,8 +81,9 @@ h1 {
   gap: 16px;
 }
 
-/* Cards (match your screenshot: linear gradient, no hover lift) */
+/* Cards */
 .card {
+  position: relative; /* for the absolute chip */
   background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02));
   border: 1px solid rgba(255, 255, 255, .08);
   border-radius: var(--radius-lg);
@@ -92,14 +92,21 @@ h1 {
   cursor: pointer;
 }
 
-.item-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 6px;
+/* Title container: normal wrapping title; reserve space so it won’t flow under the chip */
+.card .title-row {
+  display: block;
+  margin: 0 0 .35rem;
+  padding-right: var(--chip-reserve);
 }
 
-/* Pills / details / summary */
+/* Title text (wrapping, full) */
+.item-title {
+  display: block;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Flavor pill */
 .pill {
   display: inline-block;
   background: var(--accent2);
@@ -111,19 +118,10 @@ h1 {
 }
 
 details { margin-top: 8px; }
+summary { cursor: pointer; color: var(--muted); }
 
-summary {
-  cursor: pointer;
-  color: var(--muted);
-}
-
-/* Actions / buttons / links */
-.actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 16px;
-}
+/* Buttons / links */
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
 
 .button {
   background: var(--accent);
@@ -136,27 +134,17 @@ summary {
   display: inline-block; /* supports <a> or <button>.button */
 }
 
-/* White inline links (used for banner + QR link text) */
 .inline,
 .inline:link,
 .inline:visited,
 .inline:hover,
 .inline:focus,
-.inline:active {
-  color: #fff;
-  text-decoration: underline;
-}
+.inline:active { color: #fff; text-decoration: underline; }
 
 /* Footer */
-footer {
-  margin-top: 24px;
-  color: var(--muted);
-  font-size: .9rem;
-}
+footer { margin-top: 24px; color: var(--muted); font-size: .9rem; }
 
-/* ===== QR PAGE STYLES ===== */
-
-/* Full-viewport center layout */
+/* ===== QR PAGE ===== */
 .page-center {
   display: flex;
   align-items: center;
@@ -164,7 +152,6 @@ footer {
   min-height: 100svh;
 }
 
-/* QR card: solid panel (original QR look) */
 .qr-card {
   max-width: 560px;
   width: 100%;
@@ -175,11 +162,9 @@ footer {
   border: 1px solid rgba(255, 255, 255, .08);
 }
 
-/* QR page heading spacing (matches your old inline h1 margins) */
 .qr-card h1 { margin: 6px 0 6px; }
-
-/* QR subtitle + URL */
 .qr-card .sub { margin: 0 0 6px; }
+
 .url {
   color: var(--muted);
   font-size: .95rem;
@@ -187,7 +172,6 @@ footer {
   margin: 2px 0 8px;
 }
 
-/* QR white frame */
 .qr {
   margin: 12px auto 8px;
   display: inline-block;
@@ -196,15 +180,8 @@ footer {
   border-radius: 12px;
 }
 
-/* Row of buttons below the QR */
-.row {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 10px;
-}
+.row { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
 
-/* Native <button> to match site button style */
 button {
   background: var(--accent);
   border: none;
@@ -216,23 +193,15 @@ button {
 }
 
 /* ===== Accessibility & Interaction ===== */
-
-/* Remove default mobile tap flash but keep keyboard focus rings */
 html, body,
 a, a *,
 button, button *,
 summary,
-.card, .card * {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
+.card, .card * { -webkit-tap-highlight-color: rgba(0,0,0,0); }
 
-/* Prevent default :active flash on some browsers */
 a:active,
-button:active {
-  background-color: transparent;
-}
+button:active { background-color: transparent; }
 
-/* Visible focus styles for keyboard users */
 .card:focus-visible,
 summary:focus-visible,
 a:focus-visible,
@@ -243,46 +212,34 @@ button:focus-visible,
   border-radius: 10px;
 }
 
-
-.card .title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;   /* title on left, chip on right */
-  column-gap: .5rem;
-  margin-bottom: .35rem;            /* space before the flavor pill line */
-}
-
-/* Let the title wrap if needed while keeping the chip on the same row */
-.card .item-title {
-  margin: 0;
-  flex: 1 1 auto;
-  min-width: 0;                     /* prevents flex overflow on long titles */
-}
-
-/* Make the oz chip smaller and inline-friendly */
+/* ===== “Total oz” chip (top-right) ===== */
 .oz-total {
+  position: absolute;
+  top: 10px;               /* distance from top edge of the card */
+  right: 12px;             /* distance from right edge of the card */
+
   display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  padding: .15rem .45rem;           /* smaller chip */
-  border-radius: 999px;
+  align-items: center;     /* vertical centering */
+  justify-content: center; /* horizontal centering */
+  height: var(--chip-h);
+  padding: 0 var(--chip-pad-x);         /* no vertical padding => true centering */
+  border-radius: calc(var(--chip-h) / 2);
   background: #fff7f8;
   border: 1px solid #ffd6dd;
   color: #6b1a1f;
   font-weight: 700;
-  font-size: .8rem;                 /* smaller text */
+  font-size: .75rem;
   line-height: 1;
-  white-space: nowrap;              /* keeps chip on one line */
-  margin: 0;                        /* no top margin when in the header row */
-  flex: 0 0 auto;
+  white-space: nowrap;
+  margin: 0;
+  transform: translateY(var(--chip-nudge-y)); /* tiny optical lift */
+  pointer-events: auto;
 }
 
-.oz-total .count {
-  font-variant-numeric: tabular-nums;
-}
+.oz-total > span { display: inline-block; line-height: 1; }
+.oz-total .count { font-variant-numeric: tabular-nums; }
 
-
-/* Motion safety (optional) */
+/* ===== Motion safety ===== */
 @media (prefers-reduced-motion: reduce) {
   html:focus-within { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -293,191 +250,18 @@ button:focus-visible,
   }
 }
 
-/* Print cleanup */
+/* ===== Responsive tweaks ===== */
+@media (max-width: 420px) {
+  :root {
+    --chip-h: 1.25rem;
+    --chip-pad-x: .45rem;
+    --chip-nudge-y: -0.5px;
+    --chip-reserve: 92px;
+  }
+}
+
+/* ===== Print cleanup ===== */
 @media print {
   .actions, .tag { display: none !important; }
   .row { display: none !important; } /* hide QR buttons when printing */
 }
-
-
-/* Keep the title and chip on a single line */
-.card .title-row {
-  display: flex;
-  align-items: baseline;    /* aligns with title text baseline */
-  flex-wrap: nowrap;        /* never wrap to a second line */
-  column-gap: .5rem;        /* small gap between title and chip */
-  margin: 0 0 .35rem;       /* breathing room before the pill */
-}
-
-/* Override the earlier .item-title rule: make it a single-line block that can ellipsize */
-.card .item-title {
-  display: block;           /* override earlier display:flex so ellipsis can work */
-  margin: 0;                /* no extra bottom margin inside the row */
-  line-height: 1.15;
-  flex: 1 1 auto;           /* use remaining width */
-  min-width: 0;             /* required for flex+ellipsis */
-  white-space: nowrap;      /* keep on one line */
-  overflow: hidden;         /* clip if too long */
-  text-overflow: ellipsis;  /* show "…" if clipped */
-}
-
-/* Smaller, tighter, single‑line chip */
-.oz-total {
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  padding: .12rem .40rem;   /* tighter padding */
-  border-radius: 999px;
-  background: #fff7f8;
-  border: 1px solid #ffd6dd;
-  color: #6b1a1f;
-  font-weight: 700;
-  font-size: .75rem;        /* smaller text */
-  line-height: 1;
-  white-space: nowrap;      /* keep "Total: 56 oz" together */
-  margin: 0 0 0 .25rem;     /* tiny left gap from the title */
-  flex: 0 0 auto;           /* don't grow/shrink */
-}
-
-/* Monospaced numerals look cleaner in chips */
-.oz-total .count {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Optional: make chip scale down a touch on narrow phones */
-@media (max-width: 420px) {
-  .oz-total { font-size: .7rem; padding: .1rem .35rem; }
-}
-
-
-card .title-row {
-  display: flex;
-  align-items: center;        /* was baseline; center looks better with a pill */
-  flex-wrap: nowrap;
-  column-gap: .5rem;
-  margin: 0 0 .35rem;
-}
-
-/* Single-line title with ellipsis (so chip never wraps) */
-.card .item-title {
-  display: block;             /* overrides earlier display:flex */
-  margin: 0;
-  line-height: 1.15;
-  flex: 1 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* --- CHIP: perfectly centered text --- */
-.oz-total {
-  /* tune just these two to taste */
-  --chip-h: 1.35rem;          /* overall chip height */
-  --chip-pad-x: .45rem;       /* horizontal padding */
-
-  display: inline-flex;
-  align-items: center;        /* vertical centering */
-  justify-content: center;    /* horizontal centering when width > content */
-  height: var(--chip-h);
-  padding: 0 var(--chip-pad-x);  /* no vertical padding */
-  border-radius: calc(var(--chip-h) / 2); /* true pill based on height */
-  background: #fff7f8;
-  border: 1px solid #ffd6dd;
-  color: #6b1a1f;
-  font-weight: 700;
-  font-size: .75rem;
-  line-height: 1;             /* avoid extra line box space */
-  white-space: nowrap;
-  margin: 0 0 0 .25rem;
-  flex: 0 0 auto;
-  vertical-align: middle;     /* nicer alignment next to heading on some browsers */
-}
-
-/* Make inner spans not add their own line-height quirks */
-.oz-total > span {
-  display: inline-block;
-  line-height: 1;
-}
-
-/* Monospaced numerals for the count */
-.oz-total .count {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Optional: scale chip a touch on narrow phones */
-@media (max-width: 420px) {
-  .oz-total {
-    --chip-h: 1.25rem;
-    --chip-pad-x: .4rem;
-    font-size: .7rem;
-  }
-}
-/* Let the card be the positioning context for the chip */
-.card { position: relative; }
-
-/* Title block: normal wrapping title; reserve a little room on the right so
-   long titles don't flow under the chip */
-.card .title-row {
-  display: block;                       /* no flex; simpler wrapping */
-  margin: 0 0 .35rem;
-  padding-right: var(--chip-reserve, 96px); /* space reserved for the chip */
-}
-
-/* Full title, no ellipsis */
-.card .item-title {
-  display: block;            /* override earlier display:flex */
-  margin: 0;
-  line-height: 1.2;
-  white-space: normal;       /* allow wrapping */
-  overflow: visible;         /* no clipping */
-  text-overflow: clip;       /* no ellipsis */
-}
-
-/* --- CHIP: absolutely positioned top-right, perfectly centered text --- */
-.oz-total {
-  /* Tweak these 3 custom properties to taste */
-  --chip-h: 1.35rem;         /* overall height of the pill */
-  --chip-pad-x: .5rem;       /* horizontal padding */
-  --chip-nudge-y: -1px;      /* optical vertical nudge (negative = move up) */
-
-  position: absolute;
-  top: 10px;                 /* distance from top edge of the card */
-  right: 12px;               /* distance from right edge of the card */
-
-  display: inline-flex;
-  align-items: center;       /* vertical centering */
-  justify-content: center;   /* horizontal centering */
-  height: var(--chip-h);
-  padding: 0 var(--chip-pad-x);  /* no vertical padding -> true centering */
-  border-radius: calc(var(--chip-h) / 2);
-  background: #fff7f8;
-  border: 1px solid #ffd6dd;
-  color: #6b1a1f;
-  font-weight: 700;
-  font-size: .75rem;
-  line-height: 1;            /* avoid extra line-box */
-  white-space: nowrap;       /* keep "Total: 56 oz" together */
-  margin: 0;
-  flex: 0 0 auto;
-  transform: translateY(var(--chip-nudge-y)); /* tiny optical lift */
-  pointer-events: auto;       /* still clickable if you ever need it */
-}
-
-/* Ensure inner spans don't add their own line-height quirks */
-.oz-total > span { display: inline-block; line-height: 1; }
-
-/* Nice-looking numerals */
-.oz-total .count { font-variant-numeric: tabular-nums; }
-
-/* Optional: smaller chip on narrow phones */
-@media (max-width: 420px) {
-  .oz-total {
-    --chip-h: 1.25rem;
-    --chip-pad-x: .45rem;
-    --chip-nudge-y: -0.5px;
-    font-size: .72rem;
-  }
-  .card .title-row { padding-right: var(--chip-reserve, 92px); }
-}
-
