@@ -305,3 +305,39 @@ button:focus-visible,
   white-space: nowrap;
 }
 
+
+card .title-row {
+  display: grid;
+  grid-template-columns: 1fr auto; /* title | chip */
+  align-items: center;
+  gap: .5rem;
+  padding-right: 0;                /* no need for reserve padding anymore */
+  min-height: var(--chip-h);
+  container-type: inline-size;     /* enables cqw for children */
+}
+
+/* 2) Put the chip in column 2 (no absolute positioning) */
+.card .oz-total {
+  position: static;
+  transform: none;
+  margin: 0;                       /* it will naturally size itself */
+}
+
+/* 3) Make the title a single line, and fluidly scale it per card width */
+.item-title {
+  grid-column: 1/2;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;             /* stay on one line */
+  overflow: visible;               /* show full text; no ellipsis */
+  text-overflow: clip;
+
+  /* Adjust these numbers to taste. The middle term uses the card’s width. */
+  font-size: clamp(16px, calc(12px + 1.2cqw), 26px);
+}
+
+/* (Optional) If a few titles still feel tight at 300px, bump min card width a hair */
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
